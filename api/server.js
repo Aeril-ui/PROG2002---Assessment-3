@@ -26,9 +26,9 @@ app.get('/api/categories', function (req, res) {
 });
 
 app.get('/api/events/search', function (req, res) {
-  var date = req.query.date;
-  var location = req.query.location;
-  var category = req.query.category;
+  var date = req.query.date ? String(req.query.date).trim() : '';
+  var location = req.query.location ? String(req.query.location).trim() : '';
+  var category = req.query.category ? String(req.query.category).trim() : '';
 
   var sql =
     'SELECT e.id, e.name, c.name AS category, e.event_date, e.event_time, ' +
@@ -45,7 +45,8 @@ app.get('/api/events/search', function (req, res) {
   }
 
   if (location) {
-    sql = sql + ' AND e.location LIKE ?';
+    sql = sql + ' AND (e.location LIKE ? OR e.venue LIKE ?)';
+    params.push('%' + location + '%');
     params.push('%' + location + '%');
   }
 
@@ -60,7 +61,7 @@ app.get('/api/events/search', function (req, res) {
     .then(function (result) {
       res.json(result[0]);
     })
-    .catch(function (error) {
+    .catch(function () {
       res.status(500).json({ message: 'Unable to search events' });
     });
 });

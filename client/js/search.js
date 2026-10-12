@@ -16,12 +16,12 @@ function formatDate(dateString) {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  var monthName = monthNames[parseInt(month, 10) - 1];
+  var monthName = monthNames[parseInt(month, 10) - 1] || month;
   return day + ' ' + monthName + ' ' + year;
 }
 
 function formatTime(timeString) {
-  return timeString.substring(0, 5);
+  return String(timeString).substring(0, 5);
 }
 
 function formatTicketPrice(price) {
@@ -34,6 +34,7 @@ function formatTicketPrice(price) {
 function showFormMessage(text) {
   formMessage.textContent = text;
   formMessage.hidden = false;
+  formMessage.className = 'status-message status-error';
 }
 
 function clearFormMessage() {
@@ -44,6 +45,7 @@ function clearFormMessage() {
 function showSearchMessage(text) {
   searchMessage.textContent = text;
   searchMessage.hidden = false;
+  searchMessage.className = 'status-message';
 }
 
 function clearSearchMessage() {
@@ -141,7 +143,7 @@ function renderSearchResults(events) {
 
   searchResults.innerHTML = '';
 
-  if (events.length === 0) {
+  if (!events || events.length === 0) {
     showSearchMessage('No events match your search. Try different filters.');
     return;
   }
@@ -159,35 +161,24 @@ function renderSearchResults(events) {
 }
 
 function buildSearchUrl() {
-  var url = '/api/events/search';
-  var hasFilter = false;
-  var date = dateInput.value;
-  var location = locationInput.value;
-  var category = categorySelect.value;
+  var dateVal = dateInput.value;
+  var locationVal = locationInput.value.trim();
+  var categoryVal = categorySelect.value;
+  var params = [];
 
-  if (date) {
-    url = url + '?date=' + encodeURIComponent(date);
-    hasFilter = true;
+  if (dateVal) {
+    params.push('date=' + encodeURIComponent(dateVal));
   }
 
-  if (location) {
-    if (hasFilter) {
-      url = url + '&location=' + encodeURIComponent(location);
-    } else {
-      url = url + '?location=' + encodeURIComponent(location);
-      hasFilter = true;
-    }
+  if (locationVal) {
+    params.push('location=' + encodeURIComponent(locationVal));
   }
 
-  if (category) {
-    if (hasFilter) {
-      url = url + '&category=' + encodeURIComponent(category);
-    } else {
-      url = url + '?category=' + encodeURIComponent(category);
-    }
+  if (categoryVal) {
+    params.push('category=' + encodeURIComponent(categoryVal));
   }
 
-  return url;
+  return '/api/events/search' + (params.length > 0 ? '?' + params.join('&') : '');
 }
 
 fetch('/api/categories')
@@ -211,6 +202,19 @@ clearButton.addEventListener('click', function () {
 
 searchForm.addEventListener('submit', function (event) {
   event.preventDefault();
+
+  var dateVal = dateInput.value;
+  var locationVal = locationInput.value.trim();
+  var categoryVal = categorySelect.value;
+
+  if (!dateVal && !locationVal && !categoryVal) {
+    showFormMessage('Please select or enter at least one search criterion (date, location, or category).');
+    clearSearchMessage();
+    searchResults.innerHTML = '';
+    return;
+  }
+
+  clearFormMessage();
   clearSearchMessage();
   searchResults.innerHTML = '';
 
