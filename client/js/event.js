@@ -59,12 +59,78 @@ function showEventMessage(text) {
   eventMessage.hidden = false;
 }
 
+function getWeatherDescription(code) {
+  var c = parseInt(code, 10);
+  if (c === 0) {
+    return 'Clear sky';
+  }
+  if (c === 1 || c === 2 || c === 3) {
+    return 'Mainly clear, partly cloudy, and overcast';
+  }
+  if (c === 45 || c === 48) {
+    return 'Fog and depositing rime fog';
+  }
+  if (c === 51 || c === 53 || c === 55) {
+    return 'Drizzle: Light, moderate, and dense';
+  }
+  if (c === 61 || c === 63 || c === 65) {
+    return 'Rain: Light, moderate, and heavy';
+  }
+  if (c === 80 || c === 81 || c === 82) {
+    return 'Rain showers: Light, moderate, and violent';
+  }
+  if (c === 95) {
+    return 'Thunderstorm: Slight or moderate';
+  }
+  return 'Clear conditions';
+}
+
+function loadWeather(latitude, longitude, container) {
+  if (!latitude || !longitude) {
+    return;
+  }
+  var url = 'https://api.open-meteo.com/v1/forecast?latitude=' +
+    latitude + '&longitude=' + longitude +
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Australia%2FBrisbane';
+
+  fetch(url)
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error('weather-fetch-failed');
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      if (data && data.daily && data.daily.weather_code && data.daily.weather_code.length > 0) {
+        var weatherCode = data.daily.weather_code[0];
+        var maxTemp = data.daily.temperature_2m_max[0];
+        var minTemp = data.daily.temperature_2m_min[0];
+        var desc = getWeatherDescription(weatherCode);
+
+        var weatherBox = document.createElement('div');
+        weatherBox.className = 'weather-box';
+
+        var weatherTitle = document.createElement('h3');
+        weatherTitle.textContent = 'Expected Event Weather';
+
+        var weatherText = document.createElement('p');
+        weatherText.textContent = desc + ' · High: ' + maxTemp + '°C · Low: ' + minTemp + '°C';
+
+        weatherBox.appendChild(weatherTitle);
+        weatherBox.appendChild(weatherText);
+        container.appendChild(weatherBox);
+      }
+    })
+    .catch(function () {});
+}
+
 function renderEvent(event) {
   var title = document.createElement('h1');
   var image = document.createElement('img');
   var meta = document.createElement('p');
   var when = document.createElement('p');
   var where = document.createElement('p');
+  var weatherContainer = document.createElement('div');
   var purposeTitle = document.createElement('h2');
   var purpose = document.createElement('p');
   var aboutTitle = document.createElement('h2');
@@ -75,7 +141,9 @@ function renderEvent(event) {
   var progress = document.createElement('p');
   var progressBar = document.createElement('div');
   var progressFill = document.createElement('div');
-  var registerButton = document.createElement('button');
+  var registerLink = document.createElement('a');
+  var regSectionTitle = document.createElement('h2');
+  var regListContainer = document.createElement('div');
 
   var goal = parseFloat(event.goal_amount);
   var raised = parseFloat(event.progress_amount);
@@ -127,16 +195,13 @@ function renderEvent(event) {
   progressFill.style.width = percent + '%';
   progressBar.appendChild(progressFill);
 
-  var registerLink = document.createElement('a');
   registerLink.className = 'btn btn-primary register-btn';
   registerLink.href = 'register.html?id=' + event.id;
   registerLink.textContent = 'Register for this event';
 
-  var regSectionTitle = document.createElement('h2');
   regSectionTitle.className = 'detail-heading';
   regSectionTitle.textContent = 'Purchased Tickets & Registrations';
 
-  var regListContainer = document.createElement('div');
   if (!event.registrations || event.registrations.length === 0) {
     var emptyRegMsg = document.createElement('p');
     emptyRegMsg.className = 'status-message';
@@ -145,20 +210,26 @@ function renderEvent(event) {
   } else {
     var table = document.createElement('table');
     table.className = 'data-table';
+
     var thead = document.createElement('thead');
     thead.innerHTML = '<tr><th>Attendee Name</th><th>Tickets</th><th>Registration Date</th></tr>';
     table.appendChild(thead);
+
     var tbody = document.createElement('tbody');
     var i;
     for (i = 0; i < event.registrations.length; i = i + 1) {
       var reg = event.registrations[i];
       var tr = document.createElement('tr');
+
       var tdName = document.createElement('td');
       tdName.textContent = reg.user_name;
+
       var tdTickets = document.createElement('td');
       tdTickets.textContent = reg.ticket_count;
+
       var tdDate = document.createElement('td');
       tdDate.textContent = formatDate(reg.registration_date);
+
       tr.appendChild(tdName);
       tr.appendChild(tdTickets);
       tr.appendChild(tdDate);
@@ -173,6 +244,7 @@ function renderEvent(event) {
   eventDetails.appendChild(meta);
   eventDetails.appendChild(when);
   eventDetails.appendChild(where);
+  eventDetails.appendChild(weatherContainer);
   eventDetails.appendChild(purposeTitle);
   eventDetails.appendChild(purpose);
   eventDetails.appendChild(aboutTitle);
@@ -185,6 +257,8 @@ function renderEvent(event) {
   eventDetails.appendChild(registerLink);
   eventDetails.appendChild(regSectionTitle);
   eventDetails.appendChild(regListContainer);
+
+  loadWeather(event.latitude, event.longitude, weatherContainer);
 }
 
 var eventId = getEventIdFromUrl();
