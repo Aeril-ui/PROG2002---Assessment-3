@@ -127,12 +127,46 @@ function renderEvent(event) {
   progressFill.style.width = percent + '%';
   progressBar.appendChild(progressFill);
 
-  registerButton.type = 'button';
-  registerButton.className = 'btn btn-primary register-btn';
-  registerButton.textContent = 'Register';
-  registerButton.addEventListener('click', function () {
-    alert('This feature is currently under construction.');
-  });
+  var registerLink = document.createElement('a');
+  registerLink.className = 'btn btn-primary register-btn';
+  registerLink.href = 'register.html?id=' + event.id;
+  registerLink.textContent = 'Register for this event';
+
+  var regSectionTitle = document.createElement('h2');
+  regSectionTitle.className = 'detail-heading';
+  regSectionTitle.textContent = 'Purchased Tickets & Registrations';
+
+  var regListContainer = document.createElement('div');
+  if (!event.registrations || event.registrations.length === 0) {
+    var emptyRegMsg = document.createElement('p');
+    emptyRegMsg.className = 'status-message';
+    emptyRegMsg.textContent = 'No registrations recorded for this event yet. Be the first to register!';
+    regListContainer.appendChild(emptyRegMsg);
+  } else {
+    var table = document.createElement('table');
+    table.className = 'data-table';
+    var thead = document.createElement('thead');
+    thead.innerHTML = '<tr><th>Attendee Name</th><th>Tickets</th><th>Registration Date</th></tr>';
+    table.appendChild(thead);
+    var tbody = document.createElement('tbody');
+    var i;
+    for (i = 0; i < event.registrations.length; i = i + 1) {
+      var reg = event.registrations[i];
+      var tr = document.createElement('tr');
+      var tdName = document.createElement('td');
+      tdName.textContent = reg.user_name;
+      var tdTickets = document.createElement('td');
+      tdTickets.textContent = reg.ticket_count;
+      var tdDate = document.createElement('td');
+      tdDate.textContent = formatDate(reg.registration_date);
+      tr.appendChild(tdName);
+      tr.appendChild(tdTickets);
+      tr.appendChild(tdDate);
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    regListContainer.appendChild(table);
+  }
 
   eventDetails.appendChild(title);
   eventDetails.appendChild(image);
@@ -148,7 +182,9 @@ function renderEvent(event) {
   eventDetails.appendChild(goalTitle);
   eventDetails.appendChild(progress);
   eventDetails.appendChild(progressBar);
-  eventDetails.appendChild(registerButton);
+  eventDetails.appendChild(registerLink);
+  eventDetails.appendChild(regSectionTitle);
+  eventDetails.appendChild(regListContainer);
 }
 
 var eventId = getEventIdFromUrl();
