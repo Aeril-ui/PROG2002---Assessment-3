@@ -1,4 +1,5 @@
-require('dotenv').config();
+var path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 var mysql = require('mysql2/promise');
 
