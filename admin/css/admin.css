@@ -242,6 +242,15 @@ a {
   background: #f8fafc;
 }
 
+.actions-cell {
+  white-space: nowrap;
+}
+
+.actions-cell .btn {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .badge {
   display: inline-block;
   padding: 0.2rem 0.5rem;

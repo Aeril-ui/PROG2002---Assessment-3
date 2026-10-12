@@ -147,6 +147,7 @@ function renderEventsTable(events) {
     tdRegs.textContent = item.registration_count;
 
     var tdActions = document.createElement('td');
+    tdActions.className = 'actions-cell';
     var editBtn = document.createElement('button');
     editBtn.type = 'button';
     editBtn.className = 'btn btn-sm btn-edit';
