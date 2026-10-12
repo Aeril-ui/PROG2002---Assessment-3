@@ -39,6 +39,8 @@ CREATE TABLE events (
   goal_amount DECIMAL(10,2) NOT NULL,
   progress_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   image_url VARCHAR(255) NOT NULL,
+  latitude DECIMAL(9,6) DEFAULT NULL,
+  longitude DECIMAL(9,6) DEFAULT NULL,
   is_suspended TINYINT(1) NOT NULL DEFAULT 0,
   CONSTRAINT fk_events_organisation
     FOREIGN KEY (organisation_id) REFERENCES organisations (id),
@@ -61,3 +63,17 @@ INSERT INTO categories (name) VALUES
   ('Gala'),
   ('Auction'),
   ('Concert');
+
+CREATE TABLE registrations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  event_id INT NOT NULL,
+  user_name VARCHAR(150) NOT NULL,
+  email VARCHAR(150) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  ticket_count INT NOT NULL DEFAULT 1,
+  registration_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_registrations_event
+    FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE RESTRICT,
+  CONSTRAINT uq_event_registration_user
+    UNIQUE (event_id, email)
+);
