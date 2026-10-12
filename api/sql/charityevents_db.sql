@@ -89,7 +89,7 @@ INSERT INTO events (
   'Raise funds for emergency housing.',
   'A 5 km run along the river raising money for emergency housing.',
   'Join a 5 km community run at South Bank. Registration is a donation toward short-term housing for families who need a safe place to stay. Walkers are welcome, and water stations are provided on the path.',
-  '2026-10-18', '07:00:00', 'Brisbane', 'South Bank Parklands',
+  '2026-10-17', '07:00:00', 'Brisbane', 'South Bank Parklands',
   25.00, 15000.00, 6400.00, '/images/charity-default.png', -27.476400, 153.018800, 0
 ),
 (
@@ -121,7 +121,7 @@ INSERT INTO events (
   'Pay for a month of community breakfasts.',
   'An early 3 km run followed by a shared breakfast for the meals program.',
   'A short run for all ages, then a simple breakfast in the park. The ticket price funds community breakfasts through the next month. Children accompanied by an adult can take part at no extra charge.',
-  '2026-10-25', '06:30:00', 'Kangaroo Point', 'Kangaroo Point Cliffs Park',
+  '2026-10-18', '06:30:00', 'Kangaroo Point', 'Kangaroo Point Cliffs Park',
   15.00, 6000.00, 1800.00, '/images/charity-default.png', -27.481500, 153.036000, 0
 ),
 (
