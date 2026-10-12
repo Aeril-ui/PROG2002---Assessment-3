@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Registration | Harbour Light Community Fund</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="brand"><a href="index.html">Harbour Light Community Fund</a></p>
+      <nav class="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="search.html">Search events</a></li>
+          <li><a href="/admin/index.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <h1 class="page-title">Register for Event</h1>
+
+    <div id="registration-message" class="status-message" hidden></div>
+
+    <section class="panel" id="event-summary-panel">
+      <h2 id="summary-title">Loading event details...</h2>
+      <p id="summary-meta" class="event-meta"></p>
+      <p id="summary-location" class="event-meta"></p>
+      <p id="summary-price" class="event-price"></p>
+    </section>
+
+    <section class="panel" id="registration-form-panel">
+      <form id="registration-form" class="registration-form">
+        <div class="form-field">
+          <label for="reg-name">Full Name *</label>
+          <input type="text" id="reg-name" required placeholder="Your full name">
+        </div>
+
+        <div class="form-field">
+          <label for="reg-email">Email Address *</label>
+          <input type="email" id="reg-email" required placeholder="name@example.com">
+        </div>
+
+        <div class="form-field">
+          <label for="reg-phone">Contact Phone *</label>
+          <input type="tel" id="reg-phone" required placeholder="e.g. 0400 000 000">
+        </div>
+
+        <div class="form-field">
+          <label for="reg-tickets">Number of Tickets *</label>
+          <input type="number" id="reg-tickets" min="1" max="50" value="1" required>
+        </div>
+
+        <div class="form-field">
+          <p class="total-cost-display">Total Cost: <strong id="total-cost-amount">$0.00</strong></p>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-registration-btn" class="btn btn-primary">Confirm Registration</button>
+          <a href="index.html" id="cancel-link" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Harbour Light Community Fund</p>
+  </footer>
+  <script src="js/register.js"></script>
+</body>
+</html>
