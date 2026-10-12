@@ -86,6 +86,77 @@ app.get('/api/events/:id', function (req, res) {
     });
 });
 
+app.post('/api/registrations', function (req, res) {
+  var eventId = req.body.event_id;
+  var userName = req.body.user_name ? String(req.body.user_name).trim() : '';
+  var email = req.body.email ? String(req.body.email).trim() : '';
+  var phone = req.body.phone ? String(req.body.phone).trim() : '';
+  var ticketCount = parseInt(req.body.ticket_count, 10);
+
+  if (!eventId || !userName || !email || !phone || isNaN(ticketCount) || ticketCount <= 0) {
+    res.status(400).json({ message: 'All fields are required and ticket count must be at least 1' });
+    return;
+  }
+
+  var checkEventSql = 'SELECT id, ticket_price, is_suspended FROM events WHERE id = ?';
+  db.query(checkEventSql, [eventId])
+    .then(function (eventResult) {
+      var events = eventResult[0];
+      if (events.length === 0) {
+        res.status(404).json({ message: 'Selected event does not exist' });
+        return;
+      }
+
+      var targetEvent = events[0];
+      if (targetEvent.is_suspended === 1) {
+        res.status(400).json({ message: 'Cannot register for a suspended event' });
+        return;
+      }
+
+      var checkRegSql = 'SELECT id FROM registrations WHERE event_id = ? AND email = ?';
+      db.query(checkRegSql, [eventId, email])
+        .then(function (existingResult) {
+          if (existingResult[0].length > 0) {
+            res.status(400).json({ message: 'You have already registered for this event with this email' });
+            return;
+          }
+
+          var insertSql =
+            'INSERT INTO registrations (event_id, user_name, email, phone, ticket_count, registration_date) ' +
+            'VALUES (?, ?, ?, ?, ?, NOW())';
+
+          db.query(insertSql, [eventId, userName, email, phone, ticketCount])
+            .then(function (insertResult) {
+              var addedCost = parseFloat(targetEvent.ticket_price) * ticketCount;
+              var updateProgressSql =
+                'UPDATE events SET progress_amount = progress_amount + ? WHERE id = ?';
+              db.query(updateProgressSql, [addedCost, eventId])
+                .then(function () {
+                  res.status(201).json({
+                    message: 'Registration successful',
+                    registrationId: insertResult[0].insertId
+                  });
+                })
+                .catch(function () {
+                  res.status(201).json({
+                    message: 'Registration successful',
+                    registrationId: insertResult[0].insertId
+                  });
+                });
+            })
+            .catch(function () {
+              res.status(500).json({ message: 'Failed to record registration' });
+            });
+        })
+        .catch(function () {
+          res.status(500).json({ message: 'Error checking previous registration' });
+        });
+    })
+    .catch(function () {
+      res.status(500).json({ message: 'Database error verifying event' });
+    });
+});
+
 app.use(express.static(path.join(__dirname, '../client')));
 
 app.listen(PORT, function () {
