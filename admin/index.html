@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Harbour Light Community Fund</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="brand"><a href="index.html">Harbour Light Charity Admin</a></p>
+      <nav class="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="/index.html">Client Home</a></li>
+          <li><a href="/search.html">Search Events</a></li>
+          <li><a href="index.html" aria-current="page">Admin Dashboard</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <div class="dashboard-header">
+      <h1 class="page-title">Event Management Dashboard</h1>
+      <button type="button" id="open-create-btn" class="btn btn-primary">+ Create New Event</button>
+    </div>
+
+    <div id="admin-message" class="status-message" hidden></div>
+
+    <section class="panel" id="form-panel" hidden>
+      <h2 id="form-heading" class="form-title">Create Charity Event</h2>
+      <form id="event-form" class="admin-form">
+        <input type="hidden" id="event-id">
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="event-name">Event Name *</label>
+            <input type="text" id="event-name" required placeholder="e.g. Annual Gala Dinner">
+          </div>
+          <div class="form-field">
+            <label for="event-category">Category *</label>
+            <select id="event-category" required>
+              <option value="">Select category</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="event-date">Date *</label>
+            <input type="date" id="event-date" required>
+          </div>
+          <div class="form-field">
+            <label for="event-time">Time *</label>
+            <input type="time" id="event-time" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="event-location">City / Suburb *</label>
+            <input type="text" id="event-location" required placeholder="e.g. Brisbane">
+          </div>
+          <div class="form-field">
+            <label for="event-venue">Venue Name *</label>
+            <input type="text" id="event-venue" required placeholder="e.g. Brisbane City Hall">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="event-price">Ticket Price ($) *</label>
+            <input type="number" id="event-price" step="0.01" min="0" value="0.00" required>
+          </div>
+          <div class="form-field">
+            <label for="event-goal">Goal Amount ($) *</label>
+            <input type="number" id="event-goal" step="0.01" min="0" value="1000.00" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="event-lat">Latitude (Optional for Weather)</label>
+            <input type="number" id="event-lat" step="0.000001" placeholder="e.g. -27.4698">
+          </div>
+          <div class="form-field">
+            <label for="event-lng">Longitude (Optional for Weather)</label>
+            <input type="number" id="event-lng" step="0.000001" placeholder="e.g. 153.0251">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="event-image">Image URL</label>
+          <input type="text" id="event-image" value="/images/charity-default.png">
+        </div>
+
+        <div class="form-field">
+          <label for="event-purpose">Purpose Statement *</label>
+          <input type="text" id="event-purpose" required placeholder="Brief cause or purpose">
+        </div>
+
+        <div class="form-field">
+          <label for="event-short-desc">Short Description *</label>
+          <textarea id="event-short-desc" rows="2" required placeholder="Summary shown in card listings"></textarea>
+        </div>
+
+        <div class="form-field">
+          <label for="event-full-desc">Full Description *</label>
+          <textarea id="event-full-desc" rows="4" required placeholder="Comprehensive details about the event"></textarea>
+        </div>
+
+        <div class="form-field checkbox-field">
+          <label>
+            <input type="checkbox" id="event-suspended">
+            Suspend this event (hide from public view)
+          </label>
+        </div>
+
+        <div id="event-registrations-section" class="associated-registrations" hidden>
+          <h3>Associated Event Registrations</h3>
+          <div id="registrations-table-container"></div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="save-event-btn" class="btn btn-primary">Save Event</button>
+          <button type="button" id="cancel-form-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>All Events (Active, Past, Suspended)</h2>
+      <div class="table-responsive">
+        <table class="data-table" id="events-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Date & Time</th>
+              <th>Location</th>
+              <th>Price</th>
+              <th>Goal / Raised</th>
+              <th>Status</th>
+              <th>Registrations</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="events-table-body">
+            <tr>
+              <td colspan="10">Loading events...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Harbour Light Community Fund — Staff Administration</p>
+  </footer>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
