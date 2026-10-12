@@ -1,0 +1,9 @@
+{
+  "name": "prog2002-assessment-charity-events",
+  "version": "1.0.0",
+  "description": "Harbour Light Community Fund - Charity Events Application",
+  "scripts": {
+    "start": "node api/server.js",
+    "install:api": "cd api && npm install"
+  }
+}

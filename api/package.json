@@ -1,0 +1,14 @@
+{
+  "name": "charity-events-api",
+  "version": "1.0.0",
+  "description": "Charity events API for PROG2002 Assessment 2",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^4.21.2",
+    "mysql2": "^3.14.3"
+  }
+}

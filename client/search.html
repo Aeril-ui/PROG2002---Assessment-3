@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search events | Harbour Light Community Fund</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="brand"><a href="index.html">Harbour Light Community Fund</a></p>
+      <nav class="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="search.html" aria-current="page">Search events</a></li>
+          <li><a href="/admin/index.html">Admin</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <h1 class="page-title">Search charity events</h1>
+
+    <section class="panel" id="search-panel">
+      <p id="form-message" class="status-message" hidden></p>
+      <form id="search-form" class="search-form">
+        <div class="form-field">
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date">
+        </div>
+        <div class="form-field">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" placeholder="e.g. Brisbane">
+        </div>
+        <div class="form-field">
+          <label for="category">Category</label>
+          <select id="category" name="category">
+            <option value="">All categories</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="button" id="clear-filters" class="btn btn-secondary">Clear Filters</button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <h2 class="page-title">Results</h2>
+      <div id="search-results"></div>
+      <p id="search-message" class="status-message" hidden></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Harbour Light Community Fund</p>
+  </footer>
+  <script src="js/search.js"></script>
+</body>
+</html>
